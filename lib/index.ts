@@ -230,6 +230,7 @@ export default {
   initSDK(): Outcome<boolean> {
     return gamelift.initSDK()
   },
+
   processReady(
     onStartGameSession: OnStartGameSession,
     onUpdateGameSession: OnUpdateGameSession,

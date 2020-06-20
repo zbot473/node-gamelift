@@ -27,7 +27,23 @@ jobs:
       - run:
           command: npm run lint
           <<: *nvm_env
+  publish:
+    docker:
+      - image: amazonlinux
+    steps:
+      - checkout
+      - run:
+          command: npm publish
+          <<: *nvm_env
 workflows:
   build-and-lint:
     jobs:
       - build-and-lint
+  publish:
+    jobs:
+      - publish:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
