@@ -1,0 +1,33 @@
+version: 2.1
+references:
+  nvm_env: &nvm_env
+    environment:
+      BASH_ENV: '~/.nvm/nvm.sh'
+commands:
+  install-node:
+    steps:
+      - run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+      - run:
+          command: nvm install node
+          <<: *nvm_env
+jobs:
+  build-and-lint:
+    docker:
+      - image: amazonlinux
+    steps:
+      - checkout
+      - run: yum -y install tar gzip make gcc-c++
+      - install-node
+      - run:
+          command: npm install
+          <<: *nvm_env
+      - run:
+          command: npm run build
+          <<: *nvm_env
+      - run:
+          command: npm run lint
+          <<: *nvm_env
+workflows:
+  build-and-lint:
+    jobs:
+      - build-and-lint
