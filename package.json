@@ -1,7 +1,11 @@
 {
   "name": "node-gamelift",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node JS bindings for GameLift Server SDK",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marchinram/node-gamelift"
+  },
   "main": "dist/index.js",
   "gypfile": true,
   "bin": {
