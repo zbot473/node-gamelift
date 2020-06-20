@@ -11,6 +11,7 @@ const argv = require('yargs')
     demand: true,
   }).argv
 
+const appRoot = require('app-root-path')
 const tmp = require('tmp')
 const fs = require('fs')
 const ncp = require('ncp').ncp
@@ -19,19 +20,19 @@ const { exec } = require('pkg')
 const path = require('path')
 
 async function main(entryPath, buildDir, execName, nodeVersion) {
-  console.log('Creating GameLift build...')
+  console.info('Creating GameLift build...')
 
   const dir = tmp.dirSync()
   try {
     await mkdir(`${dir.name}/gamelift/lib/${os.platform}-${os.arch}`)
     await copyDir(
-      `node_modules/node-gamelift/gamelift/lib/${os.platform}-${os.arch}`,
+      `${appRoot}/node_modules/node-gamelift/gamelift/lib/${os.platform}-${os.arch}`,
       `${dir.name}/gamelift/lib/${os.platform}-${os.arch}`
     )
 
     await mkdir(`${dir.name}/build/bin`)
     await copyFile(
-      'node_modules/node-gamelift/build/Release/node-gamelift.node',
+      `${appRoot}/node_modules/node-gamelift/build/Release/node-gamelift.node`,
       `${dir.name}/build/bin/node-gamelift.node`
     )
 
@@ -46,7 +47,7 @@ async function main(entryPath, buildDir, execName, nodeVersion) {
     await rmdir(buildDir)
     await copyDir(dir.name, buildDir)
 
-    console.log(`Created! Build root: ${path.resolve(`${buildDir}/.`)}`)
+    console.info(`Created! Build root: ${path.resolve(`${buildDir}/.`)}`)
   } catch (err) {
     console.error(err)
   }
@@ -54,7 +55,8 @@ async function main(entryPath, buildDir, execName, nodeVersion) {
 
 entryPath = argv.entryPath
 buildDir = argv.buildDir || 'gamelift-build'
-execName = argv.execName || JSON.parse(fs.readFileSync('./package.json')).name
+const packageName = JSON.parse(fs.readFileSync(`${appRoot}/package.json`)).name
+execName = argv.execName || packageName
 nodeVersion = argv.nodeVersion || 'node12'
 
 if (os.platform() !== 'linux' && os.platform() !== 'win32') {

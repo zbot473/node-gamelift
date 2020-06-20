@@ -23,6 +23,7 @@
   "author": "Brian Rojas",
   "license": "MIT",
   "dependencies": {
+    "app-root-path": "^3.0.0",
     "napi-thread-safe-callback": "0.0.6",
     "ncp": "^2.0.0",
     "node-addon-api": "^3.0.0",
