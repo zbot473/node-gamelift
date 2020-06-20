@@ -3,6 +3,12 @@ references:
   nvm_env: &nvm_env
     environment:
       BASH_ENV: '~/.nvm/nvm.sh'
+  tag_filter: &tag_filter
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v\d+\.\d+\.\d+$/
 commands:
   install-node:
     steps:
@@ -15,9 +21,9 @@ jobs:
     docker:
       - image: amazonlinux
     steps:
-      - checkout
-      - run: yum -y install tar gzip make gcc-c++
+      - run: yum -y install git tar gzip make gcc-c++
       - install-node
+      - checkout
       - run:
           command: npm install
           <<: *nvm_env
@@ -27,12 +33,24 @@ jobs:
       - run:
           command: npm run lint
           <<: *nvm_env
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   publish:
     docker:
       - image: amazonlinux
     steps:
-      - checkout
+      - run: yum -y install tar gzip
+      - install-node
+      - attach_workspace:
+          at: .
       - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
+          <<: *nvm_env
+      - run:
+          name: Publish package
           command: npm publish
           <<: *nvm_env
 workflows:
@@ -41,9 +59,9 @@ workflows:
       - build-and-lint
   publish:
     jobs:
+      - build-and-lint:
+          <<: *tag_filter
       - publish:
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\d+\.\d+\.\d+$/
+          requires:
+            - build-and-lint
+          <<: *tag_filter
