@@ -6,12 +6,13 @@
     "type": "git",
     "url": "https://github.com/marchinram/node-gamelift"
   },
-  "main": "dist/index.js",
+  "main": "dist/node-gamelift.js",
   "gypfile": true,
   "bin": {
     "node-gamelift-build": "bin/node-gamelift-build.js"
   },
   "scripts": {
+    "prepublishOnly": "node bin/prepublish.js",
     "postinstall": "npm run transpile",
     "lint": "eslint lib --max-warnings 0",
     "transpile": "rm -rf dist && tsc",
