@@ -1,6 +1,5 @@
 const fs = require('fs')
 const path = require('path')
-const appRoot = require('app-root-path')
 
 function convertSymlinksToFiles(dirPath) {
   const files = fs.readdirSync(dirPath)

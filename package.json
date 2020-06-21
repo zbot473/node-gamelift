@@ -1,6 +1,6 @@
 {
   "name": "node-gamelift",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Node JS bindings for GameLift Server SDK",
   "repository": {
     "type": "git",
