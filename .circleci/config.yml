@@ -51,7 +51,7 @@ jobs:
           <<: *nvm_env
       - run:
           name: Publish package
-          command: npm publish
+          command: npm publish --unsafe-perm
           <<: *nvm_env
 workflows:
   build-and-lint:
